@@ -24,6 +24,7 @@ def dfs_right_child(i, subtree_depth):
 def mysort(a):
     n = len(a)
     tree_depth = n.bit_length()
+
     dfs_heapify(a, tree_depth)
     #check_heapiness(a, 0, tree_depth)
     for k in range(1, n):
@@ -103,7 +104,7 @@ def recover_heapiness(a, j, i, i_subtree_depth):
 def dfs_heapify(a, tree_depth):
     # There are probably optimization opportunities here.
     # most of the work in recover_heapiness is often drilling down from the root to j, 
-    # just to find the subtree_depth of j, especially of <a> is already sorted.
+    # just to find the subtree_depth of j, especially when <a> is already sorted.
     # If we allow ourselves to traverse <a> recursively, in post-order, then we'd be able to start recover_heapiness from 
     for j in range(len(a)-2, -1, -1):
         recover_heapiness(a, j, 0, tree_depth)
