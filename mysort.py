@@ -79,24 +79,23 @@ def get_subtree_depth(j, i, i_subtree_depth):
 def recover_heapiness(a, j, i, i_subtree_depth):
     n = len(a)
     subtree_depth = get_subtree_depth(j, i, i_subtree_depth)
-    i = j
-    vi = a[i]
+    vj = a[j]
     while subtree_depth >= 2:
-        l = dfs_left_child(i, subtree_depth)
+        l = dfs_left_child(j, subtree_depth)
         if l >= n: break # this node has no children
         vl = a[l]
         smaller = l
         vs = vl
-        r = dfs_right_child(i, subtree_depth)
+        r = dfs_right_child(j, subtree_depth)
         if r < n:
             vr = a[r]
             if vr < vs:
                 smaller = r
                 vs = vr
-        if vs >= vi: break
-        # swap i and <smaller>
-        a[i], a[smaller] = vs, vi
-        i = smaller # note that vi remains the same because of the swap
+        if vs >= vj: break
+        # swap j and <smaller>
+        a[j], a[smaller] = vs, vj
+        j = smaller # note that vj remains the same because of the swap
         subtree_depth -= 1
 
 
