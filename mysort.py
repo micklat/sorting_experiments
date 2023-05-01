@@ -17,7 +17,7 @@ def dfs_left_child(i, subtree_depth):
     return i+1
 
 def dfs_right_child(i, subtree_depth):
-    #assert subtree_depth >= 2
+    assert subtree_depth >= 2
     return i + (1<<(subtree_depth-1))
 
 
@@ -30,7 +30,7 @@ def mysort(a):
     dfs_heapify(a, tree_depth)
     #check_heapiness(a, 0, tree_depth)
     root = 0
-    while root < n:
+    while tree_depth > 1:
         level_stop = min(n, dfs_right_child(root, tree_depth))
         if DEBUG: print("solving a[%d:%d], tree_depth=%d" % (root, level_stop, tree_depth))
         for k in range(root, level_stop):
