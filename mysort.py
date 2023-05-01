@@ -3,7 +3,7 @@ from math import log2
 
 # This is an in-place, stable, worst-case n*log(n) sorting algorithm with O(1) additional memory complexity.
 # Unlike blocksort, it is simple, and takes less than 100 lines of code.
-# Unlike quicksort, its worst-case time is n*log(n).
+# Unlike quicksort, its worst-case time is n*log(n). Also, it eliminates the heuristics of pivots.
 # Unlike mergesort, it only needs a constant amount of auxiliary storage.
 # Unlike heapsort, it is stable.
 
@@ -17,9 +17,11 @@ def dfs_left_child(i, subtree_depth):
     return i+1
 
 def dfs_right_child(i, subtree_depth):
-    assert subtree_depth >= 2
+    #assert subtree_depth >= 2
     return i + (1<<(subtree_depth-1))
 
+
+DEBUG = False
 
 def mysort(a):
     n = len(a)
@@ -27,15 +29,23 @@ def mysort(a):
 
     dfs_heapify(a, tree_depth)
     #check_heapiness(a, 0, tree_depth)
-    for k in range(1, n):
-        j = find_smallest_from(a, k, tree_depth)
-        if j==k: continue
-        exchange_rightwards(a, k, j, tree_depth)
+    root = 0
+    while root < n:
+        level_stop = min(n, dfs_right_child(root, tree_depth))
+        if DEBUG: print("solving a[%d:%d], tree_depth=%d" % (root, level_stop, tree_depth))
+        for k in range(root, level_stop):
+            j = find_smallest_from(a, k, root, tree_depth)
+            if DEBUG: assert a[j] == a[k:].min()
+            if j==k: continue
+            exchange_rightwards(a, k, j, root, tree_depth)
+            if DEBUG: assert is_sorted(a[:k+1])
+        root = level_stop
+        tree_depth -= 1
         #check_heapiness(a, 0, tree_depth)
 
 
-def find_smallest_from(a, start, tree_depth):
-    i = 0
+def find_smallest_from(a, start, root, tree_depth):
+    i = root
     n = len(a)
     subtree_depth = tree_depth
     v_smallest = a[start]
@@ -50,18 +60,17 @@ def find_smallest_from(a, start, tree_depth):
                     i_smallest = r
             i = dfs_left_child(i, subtree_depth)
         else: # <start> is in the right subtree of <i>
-            assert a[dfs_left_child(i, subtree_depth)] <= a[start]
+            #assert a[dfs_left_child(i, subtree_depth)] <= a[start]
             i = r
         subtree_depth -= 1
     assert i==start
     return i_smallest
 
 
-def exchange_rightwards(a, k, j, tree_depth):
+def exchange_rightwards(a, k, j, root, tree_depth):
     assert k<j
     a[k], a[j] = a[j], a[k]
-    # TODO: passing i other than 0 should be possible. Once <k> is large enough, we are always within some right subtree which starts after 0.
-    recover_heapiness(a, j, 0, tree_depth) 
+    recover_heapiness(a, j, root, tree_depth) 
 
 
 def get_subtree_depth(j, i, i_subtree_depth):
@@ -105,7 +114,9 @@ def dfs_heapify(a, tree_depth):
     # There are probably optimization opportunities here.
     # most of the work in recover_heapiness is often drilling down from the root to j, 
     # just to find the subtree_depth of j, especially when <a> is already sorted.
-    # If we allow ourselves to traverse <a> recursively, in post-order, then we'd be able to start recover_heapiness from 
+    # If we allow ourselves to traverse <a> recursively, in post-order, then we'd be 
+    # able to start recover_heapiness from j instead of 0.
+    # But we don't even need that. We just need to know where are the nodes of each tree layer.
     for j in range(len(a)-2, -1, -1):
         recover_heapiness(a, j, 0, tree_depth)
 
