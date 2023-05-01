@@ -79,6 +79,7 @@ def get_subtree_depth(j, i, i_subtree_depth):
 def recover_heapiness(a, j, i, i_subtree_depth):
     n = len(a)
     subtree_depth = get_subtree_depth(j, i, i_subtree_depth)
+    del i
     vj = a[j]
     while subtree_depth >= 2:
         l = dfs_left_child(j, subtree_depth)
@@ -112,9 +113,9 @@ def is_sorted(a):
     return (a[1:] >= a[:-1]).all()
 
 
-def test(n_repetitions=1000):
+def test(n_repetitions=10):
     max_num = 1000 # just for convenience, keeping the numbers smallish
-    n = 100
+    n = 10000
     for i in range(n_repetitions):
         seed(i)
         a = randint(max_num, size=n)
