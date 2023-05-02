@@ -1,5 +1,5 @@
 from pylab import *
-from mysort import mysort
+from dfs_heap_sort import dfs_heap_sort
 from numpy import random
 from timeit import timeit
 
@@ -14,7 +14,7 @@ def get_scaling(max_n=50000):
         a = full_a[:n]
         assert a.base is full_a # a is a view, not a copy
         a[:] = random.randint(1000, size=n)
-        t = timeit(lambda: mysort(a), number=reps) / reps
+        t = timeit(lambda: dfs_heap_sort(a), number=reps) / reps
         ns.append(n)
         ts.append(t)
         print(n,t)

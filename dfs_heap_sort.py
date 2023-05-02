@@ -26,7 +26,7 @@ def dfs_right_child(i, subtree_depth):
 
 DEBUG = False
 
-def mysort(a):
+def dfs_heap_sort(a):
     n = len(a)
     tree_depth = n.bit_length()
 
@@ -134,7 +134,7 @@ def test(n_repetitions=10):
     for i in range(n_repetitions):
         seed(i)
         a = randint(max_num, size=n)
-        mysort(a)
+        dfs_heap_sort(a)
         assert(is_sorted(a))
 
 
