@@ -12,6 +12,9 @@ from math import log2
 # item in O(log(n)) time.
 
 # some non-asymptotic speed-ups are possible.
+# in particular, the calls to find_smallest_from keep visiting a frontier of nodes in the tree.
+# the nodes in the frontier are the right-children of ancestors of <k>. As <k> moves, the frontier changes gradually.
+# also, every swap between a[k] and a[j] updates one member in the frontier.
 
 def dfs_left_child(i, subtree_depth):
     return i+1
